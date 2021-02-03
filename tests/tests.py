@@ -187,6 +187,10 @@ class DaemonTestCase(unittest.TestCase):
         self.assertTrue('cat' not in self.daemon.boards[board])
         self.assertTrue('placate' in self.daemon.boards[board])
 
+    def test_ignore_entropy(self):
+        """Test entry beyond certain entropy is not added to history."""
+        self.config.set('clipster'
+
     @mock.patch('clipster.os')
     @mock.patch('clipster.tempfile.NamedTemporaryFile')
     def test_write_history_file_json(self, mock_tmp, mock_os):
@@ -459,7 +463,7 @@ class DaemonTestCase(unittest.TestCase):
     @mock.patch('clipster.get_wm_class_from_active_window')
     def test_filtered_window_classes(self, mock_class):
         """Test that blacklist/whitelist properly disables/enables capturing
-        clipboard content into history. 
+        clipboard content into history.
         Note: blacklist has precedence over whitelist."""
 
         self.daemon.window = Gtk.Window(type=Gtk.WindowType.POPUP)

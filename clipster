@@ -18,6 +18,8 @@ import re
 import stat
 from contextlib import closing
 from gi import require_version
+from numpy import unique, count_nonzero
+from math import log
 require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib, GObject  # pylint:disable=wrong-import-position
 try:
@@ -381,6 +383,27 @@ class Daemon(object):
             self.boards[board].remove(text)
             # Flag the history file for updating
             self.update_history_file = True
+
+    def get_shannon_entropy(self, text):
+        """Get Shannon entropy for a given string."""
+        length = len(text)
+
+        if length <= 1:
+            return 0
+
+        vals, counts = unique(text, return_index=True)
+        probs = counts / length
+        classes = count_nonzero(probs)
+
+        if classes <= 1:
+            return 0
+
+        entropy = 0.
+
+        for i in probs:
+            entropy -= i * log(i)
+
+        return entropy
 
     def update_history(self, board, text):
         """Update the in-memory clipboard history."""
@@ -787,6 +810,8 @@ def parse_args():
                         help="String to use as output delimiter (defaults to '\n')")
     parser.add_argument('-0', '--nul', action="store_const", const='\0', dest='delim',
                         help="Use NUL character as output delimiter.")
+    parser.add_argument('-e', '--entropy', action='', nargs="?" default=4.0, type=float,
+                        help="Value of entropy to use as a threshold to ignore certain strings.")
 
     return parser.parse_args()
 
