@@ -823,7 +823,8 @@ def parse_args():
     parser.add_argument('-0', '--nul', action="store_const", const='\0', dest='delim',
                         help="Use NUL character as output delimiter.")
     parser.add_argument('-e', '--entropy', action='store_true',
-                        help="Value of entropy to use as a threshold to ignore certain strings.")
+                        help="Value of entropy to use as a threshold to ignore certain strings. " \
+                             "For any input with new line(s) entropy calculation will be ignored.")
 
     return parser.parse_args()
 

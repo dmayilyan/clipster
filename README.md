@@ -41,6 +41,8 @@ Clipster was designed to try to add a good selection of useful features, while a
 
 * Ability to ignore selections based on a list of regex patterns. (`ignore_patterns`)
 
+* Ability to ignore selections based on entropy of selection. (`entropy`)
+
 * One-off command to ignore next clipboard selection. (`--ignore`)
 
 
@@ -67,7 +69,7 @@ There are AUR packages available for Arch Linux users: [clipster-git](https://au
 ```
 ~$ clipster -h
 usage: clipster [-h] [-f CONFIG] [-l LOG_LEVEL] [-p | -c | -d]
-                [-s | -o | -i | -r [DELETE]] [-n NUMBER] [-0] [-m DELIM]
+                [-s | -o | -i | -r [DELETE]] [-n NUMBER] [-0] [-m DELIM] [-e]
 
 Clipster clipboard manager.
 
@@ -96,6 +98,8 @@ optional arguments:
   -0, --nul             Use NUL character as output delimiter.
   -m DELIM, --delim DELIM
                         String to use as output delimiter (defaults to '\n')
+  -e, --entropy         Value of entropy to use as a threshold to ignore certain strings. For any input with new line(s) entropy calculation
+                        will be ignored.
 ```
 
 
@@ -184,6 +188,9 @@ You can create a config file containing only some of the options, and the rest w
 # NOTE: Multiple patterns will be applied sequentially: last one will be used for selection.
 # This option also applies to email and uri patterns (which are processed before additional patterns).
 #pattern_as_selection = no
+
+# Shannon entropy with base e of the input text. For any input with new line(s) entropy calculation will be ignored.
+# entropy = 4.0
 
 # Comma-separated list of WM_CLASS properties for apps where clipboard changes should be ignored.
 # Used to ignore clipboard changes from sensitive apps, e.g. password managers.
