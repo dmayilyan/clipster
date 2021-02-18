@@ -187,9 +187,20 @@ class DaemonTestCase(unittest.TestCase):
         self.assertTrue('cat' not in self.daemon.boards[board])
         self.assertTrue('placate' in self.daemon.boards[board])
 
+    def test_get_shannon_entropy(self):
+        """Test shannon entropy output."""
+        text = "1*45827396y983649238rhfnclsoic209323123qd"
+        text1 = "ntebwopm"
+        assert self.daemon.get_shannon_entropy(text) == 2.904207722009131
+        assert self.daemon.get_shannon_entropy(text1) == 2.0794415416798357
+
     def test_ignore_entropy(self):
-        """Test entry beyond certain entropy is not added to history."""
-        self.config.set('clipster'
+        """Test that entry beyond certain entropy is not added to history."""
+
+        self.config.set('clipster', 'entropy', '4.0')
+        board = 'PRIMARY'
+        self.daemon.update_history(board, 'kwdkxzgp')
+        self.assertTrue('kwdkxzgp' in self.daemon.boards[board])
 
     @mock.patch('clipster.os')
     @mock.patch('clipster.tempfile.NamedTemporaryFile')

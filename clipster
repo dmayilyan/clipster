@@ -18,7 +18,6 @@ import re
 import stat
 from contextlib import closing
 from gi import require_version
-from numpy import unique, count_nonzero, nonzero
 from math import log
 require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib, GObject  # pylint:disable=wrong-import-position
@@ -389,15 +388,32 @@ class Daemon(object):
 
     def get_shannon_entropy(self, text):
         """Get Shannon entropy for a given string."""
+        def unique(data):
+            data_count = {}
+            for i in data:
+                data_count[str(i)] = 0
+
+            for val in data:
+                if val in data:
+                    data_count[str(val)] += 1
+
+            return list(data_count.values())
+
+        def count_nonzero(l):
+            def cond(x):
+                return x != 0
+
+            return  sum(cond(i) for i in l)
+
         text = list(text)
         length = len(text)
 
         if length <= 1:
             return 0
 
-        _, counts = unique(text, return_counts=True)
-        probs = counts / length
-        probs = probs[probs != 0.]
+        counts = unique(text)
+        # make float division for python2
+        probs = [float(i) / length for i in counts]
         classes = count_nonzero(probs)
 
         if classes <= 1:
