@@ -395,7 +395,7 @@ class Daemon(object):
         if length <= 1:
             return 0
 
-        _, counts = unique(text, return_index=True)
+        _, counts = unique(text, return_counts=True)
         probs = counts / length
         probs = probs[probs != 0.]
         classes = count_nonzero(probs)
